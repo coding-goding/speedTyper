@@ -6,6 +6,9 @@
 #include <Windows.h>
 #include <time.h>
 
+#define VER "alpha 1.1"
+
+void intro();
 int startScreen();
 void gotoxy(int x, int y);
 void CursorView();
@@ -41,6 +44,7 @@ int ms;
 int tutorial;
 
 int main() {
+	intro();
 	CursorView();
 	srand(time(NULL));
 	tutorial = 1;
@@ -54,13 +58,15 @@ int main() {
 		}
 		else if (y == 3) {
 			break;
-		}
-		
+		}	
 	}
-	
-
 }
 
+void intro() {
+	printf("speedTyper ver.%s", VER);
+	printf("\n아무 키나 눌러 계속");
+	char e = _getch();
+}
 int startScreen() {
 	system("cls");
 	int s = 1;
@@ -157,19 +163,24 @@ void highScore() {
 	}
 	int l = 1;
 	char name[5];
-	char sec[5];
-	char min[5];
-	char ms[5];
+	char fsec[5];
+	char fmin[5];
+	char fms[5];
 	while (fgets(name, sizeof(name), fp) != NULL) {
 		name[strlen(name) - 1] = NULL;
-		fgets(min, sizeof(min), fp);
-		min[strlen(min) - 1] = NULL;
-		fgets(sec, sizeof(sec), fp);
-		sec[strlen(sec) - 1] = NULL;
-		fgets(ms, sizeof(ms), fp);
-		ms[strlen(ms) - 1] = NULL;
-		printf("%d - %s  %s:%s:%s\n\n", l, name, min, sec, ms);
+		fgets(fmin, sizeof(fmin), fp);
+		fmin[strlen(fmin) - 1] = NULL;
+		fgets(fsec, sizeof(fsec), fp);
+		fsec[strlen(fsec) - 1] = NULL;
+		fgets(fms, sizeof(fms), fp);
+		fms[strlen(fms) - 1] = NULL;
+		printf("%d l %s  %s:%s:%s\n\n", l, name, fmin, fsec, fms);
 		l++;
+	}
+	if (l < 11) {
+		for (int i = l; i < 11; i++) {
+			printf("%d l ---  -:-:- \n\n", i);
+		}
 	}
 	fclose(fp);
 	char s = _getch();
@@ -192,6 +203,9 @@ char randomEn() {
 	char a = ch + 97;
 	if (ch2 == 1) {
 		a -= 32;
+	}
+	if (a == 'I') {
+		a = 'l';
 	}
 	return a;
 }
@@ -236,6 +250,7 @@ void countDown(int o) {
 	}
 }
 void game() {
+	char u = 0;
 	system("cls");
 	printf("s를 눌러 시작\nb를 눌러 뒤로가기");
 	while (1) {
@@ -259,14 +274,208 @@ void game() {
 			fin();
 			start = clock();
 			while(1) {
+				if (_kbhit()) {
+					u = _getch();
+				}
+				
 				end = clock();
 				if (end - start == 3000) {
 					break;
 				}
 
 			}
+			FILE* fp;
+			fp = fopen("data.txt", "r");
+			FILE* bp;
+			bp = fopen("buffera.txt", "w");
+			FILE* vp;
+			vp = fopen("bufferb.txt", "w");
+			if (fp == NULL) {
+				printf("오류 : 파일을 열 수 없습니다.\n실행 파일과 같은 디렉토리에 data.txt 파일이 없을 수 있습니다.");
+				char t = _getch();
+				fclose(fp);
+				return 0;
+			}
+			int l = 1;
+			int p = 0;
+			char name[5];
+			char fsec[5];
+			char fmin[5];
+			char fms[5];
+			while (fgets(name, sizeof(name), fp) != NULL) {
 
-			char q = _getch();
+				name[strlen(name) - 1] = NULL;
+				fgets(fmin, sizeof(fmin), fp);;
+				fmin[strlen(fmin) - 1] = NULL;
+				fgets(fsec, sizeof(fsec), fp);
+				fsec[strlen(fsec) - 1] = NULL;
+				fgets(fms, sizeof(fms), fp);
+				fms[strlen(fms) - 1] = NULL;
+				int nmin = atoi(fmin);
+				int nsec = atoi(fsec);
+				int nms = atoi(fms);
+				if (min < nmin) {
+					fputs(name, vp);
+					fputs("\n", vp);
+					fputs(fmin, vp);
+					fputs("\n", vp);
+					fputs(fsec, vp);
+					fputs("\n", vp);
+					fputs(fms, vp);
+					fputs("\n", vp);
+					p = l;
+					break;
+				}
+				else if (min == nmin) {
+					if (sec < nsec) {
+						fputs(name, vp);
+						fputs("\n", vp);
+						fputs(fmin, vp);
+						fputs("\n", vp);
+						fputs(fsec, vp);
+						fputs("\n", vp);
+						fputs(fms, vp);
+						fputs("\n", vp);
+						p = l;
+						break;
+					}
+					else if (sec == nsec) {
+						if (ms == nms) {
+							fputs(name, vp);
+							fputs("\n", vp);
+							fputs(fmin, vp);
+							fputs("\n", vp);
+							fputs(fsec, vp);
+							fputs("\n", vp);
+							fputs(fms, vp);
+							fputs("\n", vp);
+							p = l;
+							break;
+						}
+					}
+				}
+				fputs(name, bp);
+				fputs("\n", bp);
+				fputs(fmin, bp);
+				fputs("\n", bp);
+				fputs(fsec, bp);
+				fputs("\n", bp);
+				fputs(fms, bp);
+				fputs("\n", bp);
+				l++;
+			}
+			
+			
+			
+			while (fgets(name, sizeof(name), fp) != NULL) {
+				fgets(fmin, sizeof(fmin), fp);
+				fgets(fsec, sizeof(fsec), fp);
+				fgets(fms, sizeof(fms), fp);
+				fputs(name, vp);
+				fputs(fmin, vp);
+				fputs(fsec, vp);
+				fputs(fms, vp);
+				l++;
+			}
+			fclose(fp);
+			fclose(bp);
+			fclose(vp);
+			if (l < 11) {
+				l = 1;
+				system("cls");
+				char qmin[100];
+				char qsec[100];
+				char qms[100];
+				sprintf(qmin, "%d", min);
+				sprintf(qsec, "%d", sec);
+				sprintf(qms, "%d", ms);
+				printf("이름을 입력해주세요.\n___\b\b\b");
+				char player[100] = { 0 };
+				player[0] = _getch();
+				printf("%c", player[0]);
+				player[1] = _getch();
+				printf("%c", player[1]);
+				player[2] = _getch();
+				printf("%c", player[2]);
+				
+				
+				fp = fopen("data.txt", "w");
+				bp = fopen("buffera.txt", "r");
+				vp = fopen("bufferb.txt", "r");
+
+				while (fgets(name, sizeof(name), bp) != NULL) {
+					fgets(fmin, sizeof(fmin), bp);
+					fgets(fsec, sizeof(fsec), bp);
+					fgets(fms, sizeof(fms), bp);
+					fputs(name, fp);
+					fputs(fmin, fp);
+					fputs(fsec, fp);
+					fputs(fms, fp);
+					l++;
+				}
+				
+				fputs(player, fp);
+				fputs("\n", fp);
+				fputs(qmin, fp);
+				fputs("\n", fp);
+				fputs(qsec, fp);
+				fputs("\n", fp);
+				fputs(qms, fp);
+				fputs("\n", fp);
+				l++;
+				while (fgets(name, sizeof(name), vp) != NULL) {
+					if (l == 11) {
+						break;
+					}
+					fgets(fmin, sizeof(fmin), vp);
+					fgets(fsec, sizeof(fsec), vp);
+					fgets(fms, sizeof(fms), vp);
+					fputs(name, fp);
+					fputs(fmin, fp);
+					fputs(fsec, fp);
+					fputs(fms, fp);
+					l++;
+				}
+				fclose(fp);
+				fclose(bp);
+				fclose(vp);
+			}
+			l = 1;
+			fp = fopen("data.txt", "r");
+			system("cls");
+			while (fgets(name, sizeof(name), fp) != NULL) {
+				name[strlen(name) - 1] = NULL;
+				fgets(fmin, sizeof(fmin), fp);
+				fmin[strlen(fmin) - 1] = NULL;
+				fgets(fsec, sizeof(fsec), fp);
+				fsec[strlen(fsec) - 1] = NULL;
+				fgets(fms, sizeof(fms), fp);
+				fms[strlen(fms) - 1] = NULL;
+				printf("%d l %s  %s:%s:%s", l, name, fmin, fsec, fms);
+				if (l == p) {
+					printf("  <<<");
+				}
+				printf("\n\n");
+				l++;
+			}
+			if (l < 11) {
+				for (int i = l; i < 11; i++) {
+					printf("%d l ---  -:-:- \n\n", i);
+				}
+			}
+			fclose(fp);
+			start = clock();
+			while (1) {
+				if (_kbhit()) {
+					char e = _getch();
+				}
+				end = clock();
+				if (end - start == 5000) {
+					break;
+				}
+			}
+			printf("\n\n아무 키나 눌러 처음으로");
+			char e = _getch();
 			break;
 		}
 	}
