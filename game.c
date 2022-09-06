@@ -6,7 +6,7 @@
 #include <Windows.h>
 #include <time.h>
 
-#define VER "alpha 1.1"
+#define VER "alpha 1.2"
 
 void intro();
 int startScreen();
@@ -16,6 +16,7 @@ void highScore();
 void printTime();
 char randomEn();
 int randomInt(int o);
+void capsLockTest();
 void countDown();
 void game();
 
@@ -49,7 +50,7 @@ int main() {
 	srand(time(NULL));
 	tutorial = 1;
 	while (1) {
-		int y = startScreen(); 
+		int y = startScreen();
 		if (y == 1) {
 			game();
 		}
@@ -58,7 +59,7 @@ int main() {
 		}
 		else if (y == 3) {
 			break;
-		}	
+		}
 	}
 }
 
@@ -99,7 +100,7 @@ int startScreen() {
 		else if (s == 3) {
 			gotoxy(5, 2);
 		}
-		
+
 		printf("<");
 
 		while (1) {
@@ -111,7 +112,7 @@ int startScreen() {
 					case 72:
 						if (s != 1) {
 							s--;
-							
+
 						}
 						break;
 					case 80:
@@ -215,6 +216,60 @@ int randomInt(int o) {
 	return a;
 }
 
+void capsLockTest() {
+	system("cls");
+	printf("Caps Lock의 비활성화를 확인합니다.\n");
+	printf("다음 키를 순서대로 눌러주세요.\n\n");
+	printf("A\na\nu\nU");
+	while (1) {
+		char s = NULL;
+		s = _getch();
+		if (s == 'A') {
+			break;
+		}
+		gotoxy(2, 3);
+		printf("    ");
+		gotoxy(2, 3);
+	}
+	gotoxy(2, 3);
+	printf("v");
+	while (1) {
+		char s = NULL;
+		s = _getch();
+		if (s == 'a') {
+			break;
+		}
+		gotoxy(2, 4);
+		printf("    ");
+		gotoxy(2, 4);
+	}
+	gotoxy(2, 4);
+	printf("v");
+	while (1) {
+		char s = NULL;
+		s = _getch();
+		if (s == 'u') {
+			break;
+		}
+		gotoxy(2, 5);
+		printf("    ");
+		gotoxy(2, 5);
+	}
+	gotoxy(2, 5);
+	printf("v");
+	while (1) {
+		char s = NULL;
+		s = _getch();
+		if (s == 'U') {
+			break;
+		}
+		gotoxy(2, 5);
+		printf("    ");
+		gotoxy(2, 5);
+	}
+	gotoxy(2, 5);
+	printf("v");
+}
 void countDown(int o) {
 	start = clock();
 	int time = o;
@@ -236,7 +291,7 @@ void countDown(int o) {
 			for (int i = 0; i < 20; i++) {
 				for (int j = 0; j < 40; j++) {
 					printf("%d ", time);
-				}	
+				}
 				printf("\n");
 			}
 		}
@@ -245,7 +300,7 @@ void countDown(int o) {
 			break;
 
 		}
-		
+
 
 	}
 }
@@ -260,6 +315,7 @@ void game() {
 		}
 		else if (y == 's') {
 			start = clock();
+			capsLockTest();
 			countDown(3);
 			a();
 			b();
@@ -273,11 +329,11 @@ void game() {
 			j();
 			fin();
 			start = clock();
-			while(1) {
+			while (1) {
 				if (_kbhit()) {
 					u = _getch();
 				}
-				
+
 				end = clock();
 				if (end - start == 3000) {
 					break;
@@ -364,9 +420,9 @@ void game() {
 				fputs("\n", bp);
 				l++;
 			}
-			
-			
-			
+
+
+
 			while (fgets(name, sizeof(name), fp) != NULL) {
 				fgets(fmin, sizeof(fmin), fp);
 				fgets(fsec, sizeof(fsec), fp);
@@ -392,13 +448,37 @@ void game() {
 				printf("이름을 입력해주세요.\n___\b\b\b");
 				char player[100] = { 0 };
 				player[0] = _getch();
+				while (player[0] > 90 || player[0] < 65) {
+					if (player[0] <= 122 && player[0] >= 97) {
+						player[0] -= 32;
+					}
+					else {
+						player[0] = _getch();
+					}
+				}
 				printf("%c", player[0]);
 				player[1] = _getch();
+				while (player[1] > 90 || player[1] < 65) {
+					if (player[1] <= 122 && player[1] >= 97) {
+						player[1] -= 32;
+					}
+					else {
+						player[1] = _getch();
+					}
+				}
 				printf("%c", player[1]);
 				player[2] = _getch();
+				while (player[2] > 90 || player[2] < 65) {
+					if (player[2] <= 122 && player[2] >= 97) {
+						player[2] -= 32;
+					}
+					else {
+						player[0] = _getch();
+					}
+				}
 				printf("%c", player[2]);
-				
-				
+
+
 				fp = fopen("data.txt", "w");
 				bp = fopen("buffera.txt", "r");
 				vp = fopen("bufferb.txt", "r");
@@ -413,7 +493,7 @@ void game() {
 					fputs(fms, fp);
 					l++;
 				}
-				
+
 				fputs(player, fp);
 				fputs("\n", fp);
 				fputs(qmin, fp);
@@ -470,7 +550,7 @@ void game() {
 					char e = _getch();
 				}
 				end = clock();
-				if (end - start == 5000) {
+				if (end - start >= 5000) {
 					break;
 				}
 			}
@@ -494,8 +574,8 @@ void sample() {
 			q = _getch();
 			system("cls");
 			break;
-		}	
-	}		
+		}
+	}
 }
 
 void a() {
@@ -525,7 +605,7 @@ void b() {
 	char ans = 48 + (o + p);
 	while (1) {
 		end = clock();
-		
+
 		if (!(_kbhit())) {
 			gotoxy(0, 0);
 			printf("정답은?\n%d + %d = ?", o, p);
@@ -577,7 +657,7 @@ void c() {
 				case 75:
 					if (x != 0) {
 						x--;
-						
+
 					}
 					break;
 				case 77:
@@ -604,10 +684,10 @@ void c() {
 				system("cls");
 				break;
 			}
-			
-			
-			
-		
+
+
+
+
 		}
 	}
 }
@@ -661,7 +741,7 @@ void d() {
 	while (1) {
 		end = clock();
 		if (!(_kbhit())) {
-			
+
 			printTime();
 		}
 		else {
@@ -690,8 +770,8 @@ void d() {
 				system("cls");
 				break;
 			}
-			
-			
+
+
 		}
 	}
 }
@@ -721,14 +801,14 @@ void e() {
 		if (!(_kbhit())) {
 			if (end - n >= 100) {
 				if (o == 0) {
-					
+
 					s++;
 					if (s == 10) {
 						o = 1;
 					}
 				}
 				else {
-					
+
 					s--;
 					if (s == 1) {
 						o = 0;
@@ -759,7 +839,7 @@ void e() {
 					o = 0;
 				}
 			}
-			
+
 		}
 	}
 }
@@ -779,7 +859,7 @@ void f() {
 		if (!(_kbhit())) {
 			for (int i = 0; i < 4; i++) {
 				for (int j = 0; j < 4; j++) {
-					
+
 					if (o == j && p == i) {
 						printf("@ ");
 					}
@@ -844,7 +924,7 @@ void f() {
 					break;
 				}
 			}
-			
+
 		}
 	}
 }
@@ -852,7 +932,7 @@ void f() {
 void g() {
 	char q;
 	int s = 0;
-	char pi[15] = {'3', '.', '1', '4', '1', '5', '9', '2', '6', '5', '3', '5', '8', '9', '7'};
+	char pi[15] = { '3', '.', '1', '4', '1', '5', '9', '2', '6', '5', '3', '5', '8', '9', '7' };
 	gotoxy(0, 0);
 	printf("똑같이 입력하세요!");
 	gotoxy(0, 2);
@@ -884,7 +964,7 @@ void g() {
 				system("cls");
 				break;
 			}
-			
+
 		}
 	}
 }
@@ -910,7 +990,7 @@ void h() {
 				system("cls");
 				break;
 			}
-			
+
 		}
 	}
 }
@@ -946,7 +1026,7 @@ void i() {
 				system("cls");
 				break;
 			}
-			
+
 		}
 	}
 }
@@ -1002,7 +1082,7 @@ void j() {
 				system("cls");
 				break;
 			}
-			
+
 		}
 	}
 }
@@ -1061,7 +1141,7 @@ void fin() {
 					u = 0;
 				}
 			}
-			
+
 		}
 		if (a == b) {
 			system("cls");
